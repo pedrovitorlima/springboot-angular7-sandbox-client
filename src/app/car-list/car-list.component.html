@@ -1,0 +1,10 @@
+<mat-card>
+  <mat-card-title>Car List</mat-card-title>
+  <mat-card-content>
+    <mat-list>
+      <mat-list-item *ngFor="let car of cars"></mat-list-item>
+      <img mat-list-avatar src="{{car.giphyUrl}}" alt="{{car.name}}">
+      <h3 mat-line>{{car.name}}</h3>
+    </mat-list>
+  </mat-card-content>
+</mat-card>

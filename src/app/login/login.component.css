@@ -1,0 +1,7 @@
+:host{
+    display: flex;
+    min-height: 50vh;
+  }
+  mat-card{
+    margin: auto;
+  }

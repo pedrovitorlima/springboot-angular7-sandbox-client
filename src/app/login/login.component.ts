@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 //import { MatDialog } from '@angular/material';
 import { TokenStorage } from '../shared/auths/token.storage';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -25,11 +26,11 @@ export class LoginComponent implements OnInit {
 
   login() : void {
     this.authService.attemptAuth(this.username, this.password).subscribe(
-      data => {
-        this.token.saveToken(data.headers.get("Authorization"));
+      resp => {
+        this.token.saveToken(resp.headers.get("Authorization"));
         this.router.navigate(['cool-cars']);
-      }
-    );
+        console.log(resp);
+    });
   }
 
 }

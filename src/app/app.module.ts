@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CarListComponent } from './car-list/car-list.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -13,6 +13,7 @@ import {MatButtonModule, MatCardModule, MatInputModule, MatListModule, MatToolba
 import { LoginComponent } from './login/login.component';
 import { FormsModule } from '@angular/forms';
 import { TokenStorage } from './shared/auths/token.storage';
+import { TokenInterceptor } from './security.interceptor';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,12 @@ import { TokenStorage } from './shared/auths/token.storage';
     FormsModule,
     AppRoutingModule
   ],
-  providers: [TokenStorage, AuthService],
+  providers: [TokenStorage, AuthService,
+  {
+    provide: HTTP_INTERCEPTORS,
+    useClass: TokenInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

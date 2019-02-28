@@ -11,9 +11,11 @@ export class AuthService {
 
   attemptAuth(username: string, password: string): Observable<any> {
     const credentials = {username: username, password: password};
-    console.log('Attemp http://localhost:8080/auth/');
-    console.log('With '  + credentials);
-    
-    return this.http.post('http://localhost:8080/auth/', credentials);
+    return this.http.post('http://localhost:8080/auth/', credentials, {observe: "response"});
+    // .subscribe(
+    //   data=>{
+    //     console.log("look:" + data.headers.get("Authorization"));
+    //   }
+    // );
   }
 }

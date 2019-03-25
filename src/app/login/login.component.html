@@ -35,7 +35,7 @@
             </td>
           </tr>
         </table>
-        
+        <mat-error *ngIf="error">{{error}}</mat-error>
         </mat-card-content>
         <mat-card-actions>
           <button mat-raised-button [disabled]="loading" color="primary">Login</button>

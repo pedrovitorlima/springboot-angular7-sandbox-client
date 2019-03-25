@@ -14,10 +14,13 @@ export class ErrorInterceptor implements HttpInterceptor {
             if(err.status == 401) {
                 this.authenticationService.logout();
                 location.reload(true);
-            } 
+            }else if (err.status == 403) {
+                this.authenticationService.logout();
+                location.reload(true);
+            }
 
             const error = err.error.message || err.statusText;
-            console.log(error);
+            console.log("error => " + error);
             return throwError(error);
         }))
     }

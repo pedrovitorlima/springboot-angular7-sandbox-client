@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 
-import { map } from 'rxjs/operators';
 import { User } from '../domain/user.domain';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -22,11 +22,17 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
+  attemptAuth(ussername: string, password: string): Observable<any> {
+    const credentials = {username: ussername, password: password};
+    return this.http.post('http://localhost:8080/auth', credentials);
+  }
+
   login(username: string, password: string) {
-    return this.http.post<any>('http://localhost:8080/auth/', { username, password })
+    return this.http.post<User>('http://localhost:8080/auth', { username, password })
         .pipe(map(user => {
+            console.log("returned user: " + user);
             // login successful if there's a jwt token in the response
-            if (user && user.token) {
+            if (user && user.accessToken) {
                 // store user details and jwt token in local storage to keep user logged in between page refreshes
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 this.currentUserSubject.next(user);
@@ -40,16 +46,5 @@ export class AuthService {
       // remove user from local storage to log user out
       localStorage.removeItem('currentUser');
       this.currentUserSubject.next(null);
-  }
-
-
-  attemptAuth(username: string, password: string): Observable<any> {
-    const credentials = {username: username, password: password};
-    return this.http.post('http://localhost:8080/auth/', credentials, {observe: "response"});
-    // .subscribe(
-    //   data=>{
-    //     console.log("look:" + data.headers.get("Authorization"));
-    //   }
-    // );
   }
 }

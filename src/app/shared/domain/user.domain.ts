@@ -1,6 +1,6 @@
 export class User {
-    id: number;
+    accessToken: string;
+    type: string;
     username: string;
-    password: string;
-    token?: string;
+    authorities: string[];
 }

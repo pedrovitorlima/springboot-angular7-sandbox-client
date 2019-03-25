@@ -1,3 +1,4 @@
+import { TokenStorage } from './../shared/auths/token.storage';
 import { AuthService } from './../shared/auths/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -22,7 +23,8 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private router: Router, 
-    private authService: AuthService) { }
+    private authService: AuthService,
+    private tokenStorage: TokenStorage) { }
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
@@ -31,7 +33,8 @@ export class LoginComponent implements OnInit {
     });
 
     this.authService.logout();
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/cool-cars';
+    console.log(this.returnUrl);
   }
 
   get f() {
@@ -47,14 +50,17 @@ export class LoginComponent implements OnInit {
 
     this.loading = true;
     this.authService.login(this.f.username.value, this.f.password.value)
-      .pipe(first())
       .subscribe(
-        data => {
-          console.log("navigating to: " + this.returnUrl);
+        success => {
+          console.log("token is " + success.accessToken);
+          this.tokenStorage.saveToken(success.accessToken);
           this.router.navigate([this.returnUrl]);
         },
         error => {
-          this.error = error;
+          if (error.status == 403) {
+            this.error = "Invalid user or password.";
+          }
+          
           this.loading = false;
         }
       );
